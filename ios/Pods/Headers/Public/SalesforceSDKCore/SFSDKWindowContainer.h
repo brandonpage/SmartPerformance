@@ -1,0 +1,1 @@
+../../../../../mobile_sdk/SalesforceMobileSDK-iOS/libs/SalesforceSDKCore/SalesforceSDKCore/Classes/Views/SFSDKWindowContainer.h

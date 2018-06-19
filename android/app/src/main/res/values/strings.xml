@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="account_type">com.salesforce.smartperformance.login</string>
+	<string name="app_name">SmartPerformance</string>
+	<string name="app_package">com.salesforce.smartperformance</string>
+</resources>
