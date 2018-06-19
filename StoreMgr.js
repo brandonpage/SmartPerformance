@@ -47,16 +47,8 @@ removeAllGlobalStores = forceUtil.promiser(smartstore.removeAllGlobalStores);
 
 const selectSoup = "X1_Custom_Perf_Select";
 const insertSoup = "X1_Custom_Perf_Insert";
-const updateSoup = "X1_Custom_Perf_Update";
-const randomData = ["Quinten", "Gayle", "Sheridan", "Albina", "Marianne", "Avon", "Cambridgeshire", "Buckinghamshire",
-    "Cambridgeshire", "South Deborah", "faker[parts[0]][parts[1]] is not a function",
-    "ba66e370-be9c-4079-bef2-67bcc085aaa6", "cd5d2363-d428-45fc-ad23-5d47b9411ea4", "amos", "van", "haleigh",
-    "I'll back up the bluetooth FTP feed, that should feed the SAS matrix!",
-    "copying the microchip won't do anything, we need to parse the virtual COM pixel!",
-    "If we navigate the bandwidth, we can get to the SCSI hard drive through the open-source SMTP interface!",
-    "Use the back-end HDD matrix, then you can input the neural monitor!"];
 
-async function selectBenchmark(global, order, pageSize, limit, selectPaths) {
+async function selectBenchmark(global, order, pageSize, limit) {
     return getSoupIndexSpecs(global, selectSoup)
         .then((spec) => {
             var selectPaths =  Array();
@@ -65,20 +57,17 @@ async function selectBenchmark(global, order, pageSize, limit, selectPaths) {
         })
         .then((selectPaths) => {
             var querySpec = smartstore.buildAllQuerySpec(null, order, pageSize, selectPaths);
-            console.log("\n\nQuery Spec: " + JSON.stringify(querySpec));
+            querySpec.limit = limit;
 
             var before = Date.now();
             return querySoup(false, selectSoup, querySpec)
                 .then((queryResult) => {
                     var after = Date.now();
                     var time = (after - before) / 1000;
-                    console.log("\n\nselect results: " + time);
-
-                    console.log("\n\nQuery result: " + JSON.stringify(queryResult));
                     return time;
                 })
                 .catch((error) => {
-                    console.log("\n\nquery error: " + error);
+                    console.log("query error: " + error);
                 });
         })
         .catch((error) => console.log("spec error: " + error));
@@ -90,55 +79,13 @@ async function insertBenchmark(numEntries) {
             const x1data = require('./X1_Custom_Perf.json');
             var insertData = x1data.records.slice(0, numEntries);
 
-            console.log("\n\n\ninset data: " + JSON.stringify(insertData));
-
             let before = Date.now();
             return upsertSoupEntries(false, insertSoup, insertData)
                 .then(() => {
                     let after = Date.now();
                     let time = (after - before) / 1000;
-                    console.log("\n\n\n\n\n\nInsert took " + time + " milliseconds.\n\n\n\n\n");
                     return time;
                 });
-        });
-}
-
-async function updateBenchmark(fields, rows) {
-    console.log("\n\nupdate benchmark");
-    var allFields = ["AccountId__c", "Age__c", "CaseId__c", "Comments__c", "ConnectionReceivedId", "ConnectionSentId", "ContactId__c",
-        "CreatedById", "CreatedDate", "CurrencyIsoCode", "Email__c", "Id", "IsDeleted", "IsLocked", "LastModifiedById"].slice(0, fields);
-
-    console.log("lengths should be the same.....\nfields: " + fields + "\nfield array: " + allFields.length);
-
-
-    var querySpec = smartstore.buildAllQuerySpec(null, 'ascending', rows, allFields);
-    return querySoup(false, updateSoup, querySpec)
-        .then((results) => {
-            console.log("\n\nfirst: " + JSON.stringify(results));
-
-            results.currentPageOrderedEntries.slice(0, rows-1).forEach((rows, index) => {
-
-                results.currentPageOrderedEntries[index][0] = randomData[Math.floor(Math.random() * randomData.length)];
-                console.log("by index: " + results.currentPageOrderedEntries[index][0]);
-            });
-
-            console.log("\n\nafter: " + JSON.stringify(results));
-            return JSON.parse(results.currentPageOrderedEntries);
-        })
-        .then((insertData) => {
-            console.log("\n\n\nInsert Data: " + insertData);
-            let before = Date.now();
-            upsertSoupEntries(false, updateSoup, insertData)
-                .then((response) => {
-                    let after = Date.now();
-                    let time = (after - before) / 1000;
-                    console.log("\n\noutput: " + response);
-                    return time;
-                })
-                .catch((error) => console.log("\n\nstupid error: " + error));
-        })
-        .catch((error) => {
-            console.log("update bench query error: " + error);
         });
 }
 
@@ -148,7 +95,6 @@ function createSoups() {
         if(!exists) {
             createX1Soup(selectSoup);
             createX1Soup(insertSoup);
-            createX1Soup(updateSoup);
         }
     })
     .catch((error) => { console.log("error checking if soup exists: " + error) });
@@ -202,6 +148,5 @@ function createX1Soup(soupName) {
 export default {
     createSoups,
     insertBenchmark,
-    selectBenchmark,
-    updateBenchmark
+    selectBenchmark
 };
