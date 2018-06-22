@@ -45,7 +45,6 @@ import {
     PricingCard
 } from 'react-native-elements';
 import storeMgr from './StoreMgr';
-import { QuerySpec } from 'react-native-force/src/react.force.smartstore';
 const ascendingButtons = ['ascending', 'descending'];
 
 class BenchmarkScreen extends React.Component {
@@ -60,12 +59,20 @@ class BenchmarkScreen extends React.Component {
             uiColor: '#1798c1',
             
             // Query
-            pageSize: 32,
-            queryLimit: 750,
             buildSpec: "all",
+            selectedPaths: null,
+            indexPath: null,
+            beingKey: '',
+            endKey: '',
+            exactKey: '',
+            matchKey: '',
+            likeKey: '',
+            orderPath: '',
+            pageSize: 10,
+            queryLimit: 750,
             ascendingIndex: 0,
             useCustomQuery: false,
-        
+
             // Insert
             freshDatabase: true,
             insertRows: 150,
@@ -127,13 +134,17 @@ class BenchmarkScreen extends React.Component {
     }
 
     async runSelectBenchmark() {
-        console.log("\n\nRunning select benchmark");
+        let selectedPaths = JSON.parse('["attributes","AccountId__c","Age__c","CaseId__c","Comments__c","ConnectionReceivedId","ConnectionSentId","ContactId__c","Cost__c","CreatedById","CreatedDate","CurrencyIsoCode","Email__c","Id","IsDeleted","IsLocked","LastModifiedById","LastModifiedDate","LastReferencedDate","LastViewedDate","LeadId__c","MayEdit","Name","OppId__c","OwnerId","Percent__c","Phone__c","SystemModstamp","Type__c"]');
+        let querySpec = storeMgr.buildQuery(this.state.buildSpec, this.state.indexPath, this.state.beginKey, this.state.endKey,
+            this.state.exactKey, this.state.matchKey, this.state.likeKey, ascendingButtons[this.state.ascendingIndex],
+            this.state.orderPath, this.state.pageSize, selectedPaths, this.state.queryLimit);
+        console.log("\n\n  *****  query spec  ****** \n" + JSON.stringify(querySpec) + "\n\n **************\n\n");
 
-        // needs selected paths
-        let benchPromise = storeMgr.selectBenchmark(false, ascendingButtons[this.state.ascendingIndex], this.state.pageSize, this.state.queryLimit);
-        
+        let benchPromise = storeMgr.selectBenchmark(false, querySpec);
+
         var resultsPromise = benchPromise.then((lastResult) => {
                 this.state.running = false;
+                console.log("\n\n last result: " + lastResult);
                 this.setState({ result: lastResult.toString() });
             })
             .catch((error) => {
@@ -173,6 +184,14 @@ class BenchmarkScreen extends React.Component {
         await Promise.all(resultsPromise, benchPromise);
     }
 
+    test() {
+        return (<TextInput
+            style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+            value={this.state.queryInput}
+            defaultValue={this.state.buildSpec}
+        />);
+    }
+
     render() {
         const operationButtons = ['Select', 'Insert', 'Update'];
         const { selectedOperationIndex } = this.state;
@@ -205,7 +224,29 @@ class BenchmarkScreen extends React.Component {
                         <Picker.Item label="Match Query Spec" value="match" />
                         <Picker.Item label="Smart Query Spec" value="smart" />
                     </Picker>
-        
+
+                    {this.state.buildSpec == 'exact' &&
+                    <TextInput
+                        style={{height: 40, borderColor: 'gray', borderWidth: 1, padding: 10}}
+                        onChangeText={(exactKey) => this.setState({exactKey})}
+                        value={this.state.exactKey}
+                        defaultValue={'~ Matching Text Here ~'}
+                    />}
+                    {this.state.buildSpec == 'like' &&
+                    <TextInput
+                        style={{height: 40, borderColor: this.state.uiColor, borderWidth: 1}}
+                        onChangeText={(likeKey) => this.setState({likeKey})}
+                        value={this.state.likeKey}
+                        defaultValue={'~ Like Text Here ~'}
+                    />}
+                    {this.state.buildSpec == 'match' &&
+                     <TextInput
+                         style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+                         onChangeText={(matchKey) => this.setState({matchKey})}
+                         value={this.state.matchKey}
+                         defaultValue={'~ Full Text Search Here ~'}
+                     />}
+
                     <Slider
                         value={this.state.pageSize}
                         onValueChange={(value) => this.setState({pageSize: value})}
@@ -229,19 +270,6 @@ class BenchmarkScreen extends React.Component {
                         selectedIndex={this.state.ascendingIndex}
                         buttons={ascendingButtons}
                     />
-
-                    <CheckBox style={this.dynamicColor()}
-                        title='Use Custom Query'
-                        checked={this.state.useCustomQuery}
-                        onPress={() => this.setState({ useCustomQuery: !this.state.useCustomQuery })}
-                    />
-                    {this.state.useCustomQuery == 1 &&
-                    <TextInput
-                        style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-                        editable={this.state.useCustomQuery}
-                        value={this.state.customQueryString}
-                        defaultValue={this.state.customQueryString}
-                    />}
                 </Card>
                 }
 

@@ -56,32 +56,20 @@ const randomData = ["Quinten", "Gayle", "Sheridan", "Albina", "Marianne", "Avon"
     "If we navigate the bandwidth, we can get to the SCSI hard drive through the open-source SMTP interface!",
     "Use the back-end HDD matrix, then you can input the neural monitor!"];
 
-async function selectBenchmark(global, order, pageSize, limit, selectPaths) {
-    return getSoupIndexSpecs(global, selectSoup)
-        .then((spec) => {
-            var selectPaths =  Array();
-            spec.forEach((row) => { selectPaths.push(row.path) });
-            return selectPaths;
-        })
-        .then((selectPaths) => {
-            var querySpec = smartstore.buildAllQuerySpec(null, order, pageSize, selectPaths);
-            console.log("\n\nQuery Spec: " + JSON.stringify(querySpec));
+async function selectBenchmark(global, querySpec) {
+    var before = Date.now();
+    return querySoup(false, selectSoup, querySpec)
+        .then((queryResult) => {
+            var after = Date.now();
+            var time = (after - before) / 1000;
+            console.log("\n\nselect results: " + time);
 
-            var before = Date.now();
-            return querySoup(false, selectSoup, querySpec)
-                .then((queryResult) => {
-                    var after = Date.now();
-                    var time = (after - before) / 1000;
-                    console.log("\n\nselect results: " + time);
-
-                    console.log("\n\nQuery result: " + JSON.stringify(queryResult));
-                    return time;
-                })
-                .catch((error) => {
-                    console.log("\n\nquery error: " + error);
-                });
+            console.log("\n\nQuery result: " + JSON.stringify(queryResult));
+            return time;
         })
-        .catch((error) => console.log("spec error: " + error));
+        .catch((error) => {
+            console.log("\n\nquery error: " + error);
+        });
 }
 
 async function insertBenchmark(numEntries) {
@@ -199,9 +187,33 @@ function createX1Soup(soupName) {
     });
 }
 
+function buildQuery(type, indexPath, beginKey, endKey, exactKey, matchKey, likeKey, order, orderPath, pageSize, selectedPaths, queryLimit) {
+    var querySpec;
+    switch(type) {
+        case 'all':
+            querySpec = smartstore.buildAllQuerySpec(indexPath, order, pageSize, selectedPaths);
+            break;
+        case 'exact':
+            querySpec = smartstore.buildExactQuerySpec(indexPath, exactKey, pageSize, order, orderPath, selectedPaths);
+            break;
+        case 'match':
+            querySpec = smartstore.buildMatchQuerySpec(indexPath, matchKey, order, pageSize, orderPath, selectedPaths);
+            break;
+        case 'range':
+            querySpec = smartstore.buildRangeQuerySpec(indexPath, beginKey, endKey, order, pageSize, orderPath, selectedPaths);
+            break;
+        case 'like':
+            querySpec = smartstore.buildLikeQuerySpec(indexPath, likeKey, order, pageSize, orderPath, selectedPaths);
+            break;
+    }
+
+    querySpec.limit = queryLimit;
+    return querySpec;
+}
 export default {
     createSoups,
     insertBenchmark,
     selectBenchmark,
-    updateBenchmark
+    updateBenchmark,
+    buildQuery
 };
