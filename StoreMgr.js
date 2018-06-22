@@ -96,9 +96,6 @@ async function updateBenchmark(fields, rows) {
     var allFields = ["AccountId__c", "Age__c", "CaseId__c", "Comments__c", "ConnectionReceivedId", "ConnectionSentId", "ContactId__c",
         "CreatedById", "CreatedDate", "CurrencyIsoCode", "Email__c", "Id", "IsDeleted", "IsLocked", "LastModifiedById"].slice(0, fields);
 
-    console.log("lengths should be the same.....\nfields: " + fields + "\nfield array: " + allFields.length);
-
-
     var querySpec = smartstore.buildAllQuerySpec(null, 'ascending', rows, allFields);
     return querySoup(false, updateSoup, querySpec)
         .then((results) => {

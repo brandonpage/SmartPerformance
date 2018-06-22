@@ -195,8 +195,7 @@ class BenchmarkScreen extends React.Component {
     render() {
         const operationButtons = ['Select', 'Insert', 'Update'];
         const { selectedOperationIndex } = this.state;
-        const { ascendingIndex } = this.state;
-        
+
         return (
              <View style={{ flex: 1 }}>
                 <ButtonGroup
@@ -222,7 +221,6 @@ class BenchmarkScreen extends React.Component {
                         <Picker.Item label="Range Query Spec" value="range" />
                         <Picker.Item label="Like Query Spec" value="like" />
                         <Picker.Item label="Match Query Spec" value="match" />
-                        <Picker.Item label="Smart Query Spec" value="smart" />
                     </Picker>
 
                     {this.state.buildSpec == 'exact' &&
@@ -230,21 +228,32 @@ class BenchmarkScreen extends React.Component {
                         style={{height: 40, borderColor: 'gray', borderWidth: 1, padding: 10}}
                         onChangeText={(exactKey) => this.setState({exactKey})}
                         value={this.state.exactKey}
-                        defaultValue={'~ Matching Text Here ~'}
                     />}
+                    {this.state.buildSpec == 'range' &&
+                    <TextInput
+                        style={{height: 40, borderColor: 'gray', borderWidth: 1, padding: 10}}
+                        onChangeText={(beginKey) => this.setState({beginKey})}
+                        value={this.state.beginKey}
+                    />
+                    }
+                    {this.state.buildSpec == 'range' &&
+                    <TextInput
+                        style={{height: 40, borderColor: 'gray', borderWidth: 1, padding: 10}}
+                        onChangeText={(endKey) => this.setState({endKey})}
+                        value={this.state.endKey}
+                    />
+                    }
                     {this.state.buildSpec == 'like' &&
                     <TextInput
                         style={{height: 40, borderColor: this.state.uiColor, borderWidth: 1}}
                         onChangeText={(likeKey) => this.setState({likeKey})}
                         value={this.state.likeKey}
-                        defaultValue={'~ Like Text Here ~'}
                     />}
                     {this.state.buildSpec == 'match' &&
                      <TextInput
                          style={{height: 40, borderColor: 'gray', borderWidth: 1}}
                          onChangeText={(matchKey) => this.setState({matchKey})}
                          value={this.state.matchKey}
-                         defaultValue={'~ Full Text Search Here ~'}
                      />}
 
                     <Slider
