@@ -62,9 +62,6 @@ async function selectBenchmark(global, querySpec) {
         .then((queryResult) => {
             var after = Date.now();
             var time = (after - before) / 1000;
-            console.log("\n\nselect results: " + time);
-
-            console.log("\n\nQuery result: " + JSON.stringify(queryResult));
             return time;
         })
         .catch((error) => {
@@ -78,53 +75,18 @@ async function insertBenchmark(numEntries) {
             const x1data = require('./X1_Custom_Perf.json');
             var insertData = x1data.records.slice(0, numEntries);
 
-            console.log("\n\n\ninset data: " + JSON.stringify(insertData));
-
             let before = Date.now();
             return upsertSoupEntries(false, insertSoup, insertData)
                 .then(() => {
                     let after = Date.now();
                     let time = (after - before) / 1000;
-                    console.log("\n\n\n\n\n\nInsert took " + time + " milliseconds.\n\n\n\n\n");
                     return time;
                 });
         });
 }
 
 async function updateBenchmark(fields, rows) {
-    console.log("\n\nupdate benchmark");
-    var allFields = ["AccountId__c", "Age__c", "CaseId__c", "Comments__c", "ConnectionReceivedId", "ConnectionSentId", "ContactId__c",
-        "CreatedById", "CreatedDate", "CurrencyIsoCode", "Email__c", "Id", "IsDeleted", "IsLocked", "LastModifiedById"].slice(0, fields);
-
-    var querySpec = smartstore.buildAllQuerySpec(null, 'ascending', rows, allFields);
-    return querySoup(false, updateSoup, querySpec)
-        .then((results) => {
-            console.log("\n\nfirst: " + JSON.stringify(results));
-
-            results.currentPageOrderedEntries.slice(0, rows-1).forEach((rows, index) => {
-
-                results.currentPageOrderedEntries[index][0] = randomData[Math.floor(Math.random() * randomData.length)];
-                console.log("by index: " + results.currentPageOrderedEntries[index][0]);
-            });
-
-            console.log("\n\nafter: " + JSON.stringify(results));
-            return JSON.parse(results.currentPageOrderedEntries);
-        })
-        .then((insertData) => {
-            console.log("\n\n\nInsert Data: " + insertData);
-            let before = Date.now();
-            upsertSoupEntries(false, updateSoup, insertData)
-                .then((response) => {
-                    let after = Date.now();
-                    let time = (after - before) / 1000;
-                    console.log("\n\noutput: " + response);
-                    return time;
-                })
-                .catch((error) => console.log("\n\nstupid error: " + error));
-        })
-        .catch((error) => {
-            console.log("update bench query error: " + error);
-        });
+    // TODO
 }
 
 function createSoups() {

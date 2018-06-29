@@ -56,7 +56,7 @@ class BenchmarkScreen extends React.Component {
         super(props);
         this.state = {
             selectedOperationIndex: 0,
-            uiColor: '#1798c1',
+            uiColor: '#4f9deb',
             
             // Query
             buildSpec: "all",
@@ -90,17 +90,6 @@ class BenchmarkScreen extends React.Component {
 
     updateOperationIndex(selectedOperationIndex) {
         this.setState({selectedOperationIndex});
-        switch(this.state.selectedOperationIndex) {
-            case 0:
-                this.setState({ uiColor: '#1798c1' });
-                break;
-            case 1:
-                this.setState({ uiColor: '#b20000' });
-                break;
-            case 2:
-                this.setState({ uiColor: '#800080' });
-                break;
-        }
     }
 
     dynamicColor = function() {
@@ -138,13 +127,10 @@ class BenchmarkScreen extends React.Component {
         let querySpec = storeMgr.buildQuery(this.state.buildSpec, this.state.indexPath, this.state.beginKey, this.state.endKey,
             this.state.exactKey, this.state.matchKey, this.state.likeKey, ascendingButtons[this.state.ascendingIndex],
             this.state.orderPath, this.state.pageSize, selectedPaths, this.state.queryLimit);
-        console.log("\n\n  *****  query spec  ****** \n" + JSON.stringify(querySpec) + "\n\n **************\n\n");
-
         let benchPromise = storeMgr.selectBenchmark(false, querySpec);
 
         var resultsPromise = benchPromise.then((lastResult) => {
                 this.state.running = false;
-                console.log("\n\n last result: " + lastResult);
                 this.setState({ result: lastResult.toString() });
             })
             .catch((error) => {
@@ -155,7 +141,6 @@ class BenchmarkScreen extends React.Component {
     }
 
     async runInsertBenchmark() {
-        // update storemgr with this.state.freshDatabase
         let benchPromise = storeMgr.insertBenchmark(this.state.insertRows);
 
         var resultsPromise = benchPromise.then((lastResult) => {
@@ -211,7 +196,7 @@ class BenchmarkScreen extends React.Component {
 
                     <Picker
                         placeholder="Select Query Spec Type"
-                        placeholderStyle={this.dynamicColor()}
+                        placeholderStyle={this.state.uiColor}
                         mode="dropdown"
                         selectedValue={this.state.buildSpec}
                         onValueChange={this.updateBuildSpec.bind(this)}
@@ -245,7 +230,7 @@ class BenchmarkScreen extends React.Component {
                     }
                     {this.state.buildSpec == 'like' &&
                     <TextInput
-                        style={{height: 40, borderColor: this.state.uiColor, borderWidth: 1}}
+                        style={{height: 40, borderColor: 'grey', borderWidth: 1}}
                         onChangeText={(likeKey) => this.setState({likeKey})}
                         value={this.state.likeKey}
                     />}
@@ -274,7 +259,7 @@ class BenchmarkScreen extends React.Component {
                     />
                     <Text>Query Limit: {this.state.queryLimit}</Text>
 
-                    <ButtonGroup style={this.dynamicColor()}
+                    <ButtonGroup style={this.state.uiColor}
                         onPress={this.udpateAscendingIndex}
                         selectedIndex={this.state.ascendingIndex}
                         buttons={ascendingButtons}
@@ -299,32 +284,10 @@ class BenchmarkScreen extends React.Component {
                     <Text>Number of Rows to Add: {this.state.insertRows}</Text>
                 </Card>
                 }
-
-                {this.state.selectedOperationIndex == 2 &&
-                <Card title={'Update Data'}>
-                    <Slider
-                        value={this.state.updateFields}
-                        onValueChange={(value) => this.setState({updateFields: value})}
-                        minimumValue={1}
-                        maximumValue={15}
-                        step={1}
-                    />
-                    <Text>Number of Fields to Update: {this.state.updateFields}</Text>
-
-                    <Slider
-                        value={this.state.updateRows}
-                        onValueChange={(value) => this.setState({updateRows: value})}
-                        minimumValue={1}
-                        maximumValue={200}
-                        step={1}
-                    />
-                    <Text>Number of Rows to Update: {this.state.updateRows}</Text>
-                </Card>
-                }
                 </ScrollView>
                 
                 <PricingCard
-                    color='#4f9deb'
+                    color={this.state.uiColor}
                     title='Results'
                     price={this.state.result}
                     info={[]}
