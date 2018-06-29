@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "SmartPerformance.app"
-               BlueprintName = "SmartPerformance"
-               ReferencedContainer = "container:SmartPerformance.xcodeproj">
+               BuildableName = "SmartStorePerformance.app"
+               BlueprintName = "SmartStorePerformance"
+               ReferencedContainer = "container:SmartStorePerformance.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -29,9 +29,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "SmartPerformanceTests.xctest"
-               BlueprintName = "SmartPerformanceTests"
-               ReferencedContainer = "container:SmartPerformance.xcodeproj">
+               BuildableName = "SmartStorePerformanceTests.xctest"
+               BlueprintName = "SmartStorePerformanceTests"
+               ReferencedContainer = "container:SmartStorePerformance.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -48,9 +48,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "SmartPerformanceTests.xctest"
-               BlueprintName = "SmartPerformanceTests"
-               ReferencedContainer = "container:SmartPerformance.xcodeproj">
+               BuildableName = "SmartStorePerformanceTests.xctest"
+               BlueprintName = "SmartStorePerformanceTests"
+               ReferencedContainer = "container:SmartStorePerformance.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -58,9 +58,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "SmartPerformance.app"
-            BlueprintName = "SmartPerformance"
-            ReferencedContainer = "container:SmartPerformance.xcodeproj">
+            BuildableName = "SmartStorePerformance.app"
+            BlueprintName = "SmartStorePerformance"
+            ReferencedContainer = "container:SmartStorePerformance.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -82,9 +82,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "SmartPerformance.app"
-            BlueprintName = "SmartPerformance"
-            ReferencedContainer = "container:SmartPerformance.xcodeproj">
+            BuildableName = "SmartStorePerformance.app"
+            BlueprintName = "SmartStorePerformance"
+            ReferencedContainer = "container:SmartStorePerformance.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -101,9 +101,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "SmartPerformance.app"
-            BlueprintName = "SmartPerformance"
-            ReferencedContainer = "container:SmartPerformance.xcodeproj">
+            BuildableName = "SmartStorePerformance.app"
+            BlueprintName = "SmartStorePerformance"
+            ReferencedContainer = "container:SmartStorePerformance.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
